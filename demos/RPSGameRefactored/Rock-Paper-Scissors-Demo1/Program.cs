@@ -9,68 +9,71 @@ namespace Rock_Paper_Scissors_Demo1
 			bool playAgain = true;
 			do
 			{
-				int convertedNumber = -1;
-				bool conversionBool = false;
+				//int convertedNumber = -1;
+				//bool conversionBool = false;
+				Choice computerChoice;
+				Choice userChoice = Choice.invalid;
 				int computerWins = 0;   //how many rounds the computer has won
 				int userWins = 0;       //how many rounds the user has won
 				int tieRound = 0;       //how many tie rounds
 				int round = 1;          //the nuimebr of roiunds played
 										//get input form the user
 				Console.WriteLine("Hello. Welcome to Rock-Paper-Scissors Game!");
-				Console.WriteLine("What is your Name?");
-				string userName = Console.ReadLine();
+				Console.WriteLine("What is your First Name?");
+				string userFName = Console.ReadLine();
+				Console.WriteLine("What is your Last Name?");
+				string userLName = Console.ReadLine();
+
+				GamePlayLogic game = new GamePlayLogic(userFName, userLName);
+				// save the name as a new player
+
 
 				//loop here till one player has won 2
-				while (computerWins < 2 && userWins < 2)
+				//call the WinnerYet method to see i there's a winner
+				while (game.WinnerYet() == null)
 				{
 					//get user choice and validate
 					do
 					{
 						Console.WriteLine("Please enter enter 1 for ROCK, 2 for PAPER, 3 for SCISSORS.\n");
 						string userInput = Console.ReadLine();
-
-						//this version of TryParse() takes a string and the second argument is an out variable that is instantiated in that moment.
-						conversionBool = Int32.TryParse(userInput, out convertedNumber);
-						if (!conversionBool || convertedNumber < 1 || convertedNumber > 3)
+						userChoice = game.ValidateUserChoice(userInput);
+						if (userChoice == Choice.invalid)
 						{
 							Console.WriteLine("Hey, buddy... that wasn't a 1 or 2 or 3!");
 						}
-					} while (!(convertedNumber > 0 && convertedNumber < 4));
-					/**homework - 
-					 * 1. get a random number for the computer
-					 * 2. compare who won the round
-					 * 3. refactor the code to have a first to two wins game
-					 * 4. print out the winner, and how many games were won by each (and ties)
-					 * 5. exit the program.
-					**/
+					} while (userChoice == Choice.invalid);
 
-					Random randNum = new Random();
-					int computerChoice = randNum.Next(1, 4);// inclusive of the first (lower) value and exclusive of hte second(upper) value. 
+					// get the computers choice
+					computerChoice = game.GetComputerChoice();
 					Console.WriteLine($"The computers choice is {computerChoice}");
-					if ((computerChoice == 1 && convertedNumber == 2) || (computerChoice == 2 && convertedNumber == 3) || (computerChoice == 3 && convertedNumber == 1))
-					{
-						Console.WriteLine("You won this round.\n");
-						userWins++;
+					Player roundWinner = game.PlayRound(computerChoice,userChoice);
+                    try
+                    {
+						Console.WriteLine($"The winner of this round is {roundWinner.Fname} {roundWinner.Lname}");
+						Console.WriteLine("The winner of this round is {0} {1}",roundWinner.Fname,roundWinner.Lname);
 					}
-					else if (computerChoice == convertedNumber)
-					{
-						Console.WriteLine("This round was a tie.\n");
-						tieRound++;
-					}
-					else
-					{
-						Console.WriteLine("The computer won this round.\n");
-						computerWins++;
-					}
+					catch (SystemException ex)
+                    {
+						Console.WriteLine($"Congrats! This is the SystemException class. => {ex.Message}");
+						Console.WriteLine($"\n\nThere is no winner yet.\n\n");
 
-					if (computerWins >= 2 || userWins >= 2)
-					{
-						break;
 					}
-					round++;
+					catch (Exception ex)
+                    {
+						Console.WriteLine("This is the Exception class");
+                    }
+                    finally
+                    {
+						Console.WriteLine("This is the finally block");
+                    }
 				}
 
+				Player gameWinner = game.WinnerYet();
+
 				Console.WriteLine($"The game is over.");
+				Game currentGame = game.game;
+
 				Console.WriteLine($"The computer won {computerWins} games.");
 				Console.WriteLine($"You won {userWins} games.");
 				Console.WriteLine($"There were {tieRound} ties.");
