@@ -13,19 +13,15 @@ namespace Rock_Paper_Scissors_Demo1
 				//bool conversionBool = false;
 				Choice computerChoice;
 				Choice userChoice = Choice.invalid;
-				int computerWins = 0;   //how many rounds the computer has won
-				int userWins = 0;       //how many rounds the user has won
-				int tieRound = 0;       //how many tie rounds
-				int round = 1;          //the nuimebr of roiunds played
-										//get input form the user
 				Console.WriteLine("Hello. Welcome to Rock-Paper-Scissors Game!");
 				Console.WriteLine("What is your First Name?");
 				string userFName = Console.ReadLine();
 				Console.WriteLine("What is your Last Name?");
 				string userLName = Console.ReadLine();
 
-				GamePlayLogic game = new GamePlayLogic(userFName, userLName);
-				// save the name as a new player
+				GamePlayLogic game = new GamePlayLogic();
+				// log in the player
+				game.Login(userFName, userLName);
 
 
 				//loop here till one player has won 2
@@ -48,36 +44,35 @@ namespace Rock_Paper_Scissors_Demo1
 					computerChoice = game.GetComputerChoice();
 					Console.WriteLine($"The computers choice is {computerChoice}");
 					Player roundWinner = game.PlayRound(computerChoice,userChoice);
+					//have this try catch for when there is no round winner and the Fname/Lname lfields are NULL.
                     try
                     {
 						Console.WriteLine($"The winner of this round is {roundWinner.Fname} {roundWinner.Lname}");
-						Console.WriteLine("The winner of this round is {0} {1}",roundWinner.Fname,roundWinner.Lname);
 					}
 					catch (SystemException ex)
                     {
 						Console.WriteLine($"Congrats! This is the SystemException class. => {ex.Message}");
-						Console.WriteLine($"\n\nThere is no winner yet.\n\n");
-
 					}
 					catch (Exception ex)
                     {
-						Console.WriteLine("This is the Exception class");
+						Console.WriteLine($"An unknown exception was thrown in Program.cs try/catch => {ex.Message}");
                     }
-                    finally
-                    {
-						Console.WriteLine("This is the finally block");
-                    }
+					//the finally block ALWAYS runs!!!
+      //              finally
+      //              {
+						//Console.WriteLine("This is the finally block");
+      //              }
 				}
 
 				Player gameWinner = game.WinnerYet();
 
 				Console.WriteLine($"The game is over.");
-				Game currentGame = game.game;
+				//Game currentGame = game.currentGame;
 
-				Console.WriteLine($"The computer won {computerWins} games.");
-				Console.WriteLine($"You won {userWins} games.");
-				Console.WriteLine($"There were {tieRound} ties.");
-				Console.WriteLine($"This game was {round} rounds long..");
+				Console.WriteLine($"The computer won {game.GetComputerWins()} games.");
+				Console.WriteLine($"You won {game.GetUserWins()} games.");
+				Console.WriteLine($"There were {game.GetTies()} ties.");
+				Console.WriteLine($"This game was {game.GetNumRounds()} rounds long..");
 				Console.WriteLine($"Would you like to play again?\nEnter no is you don't want to play again.\nOtherwise, do anything else.");
 				string playAgainInput = Console.ReadLine();
 				

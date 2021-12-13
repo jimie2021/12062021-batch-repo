@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rock_Paper_Scissors_Demo1
 {
-    internal class Player
+    public class Player
     {
         public string Fname{ get; set; }
         public string Lname { get; set; }

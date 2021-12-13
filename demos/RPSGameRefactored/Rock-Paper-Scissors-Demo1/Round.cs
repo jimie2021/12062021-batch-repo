@@ -1,6 +1,6 @@
 ﻿namespace Rock_Paper_Scissors_Demo1
 {
-    internal class Round
+    public class Round
     {
         public Player Player1 { get; set; }
         public Player Player2 { get; set; }
